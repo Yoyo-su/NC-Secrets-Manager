@@ -3,7 +3,7 @@ from unittest.mock import patch
 from utils.get_user_input import get_user_input
 from utils.exit import check_exit
 
-exit
+
 class TestGetUserInput:
     @pytest.mark.it("should accept valid inputs of 'e', 'r', 'd', 'l' and 'x'")
     @patch('utils.get_user_input.input')
