@@ -5,6 +5,7 @@ from moto import mock_aws
 from unittest.mock import patch
 from utils.get_user_input import get_user_input
 from utils.add_secret import add_secret
+from utils.fetch_secret import fetch_secret
 from utils.list_secrets import list_secrets
 from utils.exit import check_exit
 
@@ -85,6 +86,24 @@ class TestAddSecret:
         with pytest.raises(Exception):
             add_secret(secrets_client, test_secret, test_username, test_password)
 
+class TestFetchSecrets:
+    @pytest.mark.it('should retrieve a secret and save it locally')
+    def test_fetch_secret_saves_secret(self, secrets_client):
+        test_secret = 'testsecret'
+        test_username = 'testusername'
+        test_password = 'testpassword'
+        add_secret(secrets_client, test_secret, test_username, test_password)
+        fetch_secret(secrets_client, test_secret)
+        with open(f'{test_secret}.txt', 'r', encoding='utf-8') as file:
+            secret = file.read()
+            assert secret == "{'username': 'testusername', 'password': 'testpassword'}"
+            
+    @pytest.mark.it("should raise error if secret doesn't exist")
+    def test_fetch_secret_rasies_error_if_no_secrets(self, secrets_client):
+        test_secret = 'testsecret'
+        with pytest.raises(Exception):
+            fetch_secret(secrets_client, test_secret)
+
 class TestListSecrets:
     @pytest.mark.it('should return empty list if no secrets')
     def test_list_secrets_return_empty_list(self, secrets_client):
@@ -105,6 +124,13 @@ class TestListSecrets:
         assert len(secret_list) == 2
         assert test_secret1 == secret_list[0]['Name']
         assert test_secret2 == secret_list[1]['Name']
+    
+    @pytest.mark.it("should raise error if client doesn't exist")
+    def test_list_secrets_raises_error_if_no_client(self, secrets_client):
+        secrets_client = 'bad_client'
+        with pytest.raises(Exception):
+            fetch_secret(secrets_client, test_secret)  
+        
         
 class TestExit:
     @pytest.mark.it("should return false if user input is not 'x'")
