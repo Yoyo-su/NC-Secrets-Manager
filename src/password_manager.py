@@ -1,5 +1,6 @@
 from utils.get_user_input import get_user_input
 from utils.add_secret import add_secret
+from utils.list_secrets import list_secrets
 from utils.exit import check_exit
 import boto3
 
@@ -24,3 +25,8 @@ while not Check_Exit:
         username = input("UserId:   ")
         password = input("Password: ")
         add_secret(secrets_client, secret_name, username, password)
+        
+    if user_input == 'l':
+        user_input = 0
+        list_secrets()
+        
