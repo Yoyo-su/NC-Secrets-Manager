@@ -5,4 +5,4 @@ def add_secret(client, secret_name, username, password):
         print("Secret saved.")
     except Exception as error:
         print(f'Failed to add_secret: {error}')
-        raise Exception
+        raise error
