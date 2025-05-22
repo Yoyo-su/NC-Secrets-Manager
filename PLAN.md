@@ -6,7 +6,7 @@ The application will use a python script (password_manager.py) to call on a clas
 
         def add_secret - store a user ID and password as a secret in secretsmanager
         
-        def retrieve_secret - retrieve a secret - the resulting user ID and password will be stored in a .txt file (not printed).
+        def fetch_secret - retrieve a secret - the resulting user ID and password will be stored in a .txt file (not printed).
         
         def delete_secret - delete a secret from secretsmanager
         
