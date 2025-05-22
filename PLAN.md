@@ -12,7 +12,7 @@ The application will use a python script (password_manager.py) to call on a clas
         
         def Listing - list all the stored secrets
         
-        def Exit - Exit the application
+        def Exit - Exit the application if 'x' pressed
 
 
 The script will get the users inputs utilising a function
