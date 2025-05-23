@@ -8,7 +8,7 @@ from utils.add_secret import add_secret
 from utils.fetch_secret import fetch_secret
 from utils.list_secrets import list_secrets
 from utils.exit import check_exit
-
+from utils.delete_secret import delete_secret
 
 @pytest.fixture
 def aws_creds():
@@ -144,6 +144,27 @@ class TestExit:
         assert check_exit(test_input) is True
 
          
+class TestDelete:
+    @pytest.mark.it("should delete the secret with  geven ecret" )
+    def test_delete_secret_with_secret_id(self,secrets_client):
+        test_secret1 = 'testsecret'
+        test_username = 'testusername'
+        test_password = 'testpassword'
+        add_secret(secrets_client, test_secret1, test_username, test_password)
+        secret_list = list_secrets(secrets_client)
+        assert len(secret_list) == 1
+        delete_secret(secrets_client,test_secret1)
+        secret_list = list_secrets(secrets_client)
+        assert len(secret_list) == 0
+
+    # @pytest.mark.it("should raise error if secret doesn't exist")
+    # def test_delete_secret_rasies_error_if_no_secrets(self, secrets_client):
+    #     test_secret = 'testsecret'
+    #     secret_list = list_secrets(secrets_client)
+    #     assert len(secret_list) == 0
+    #     with pytest.raises(Exception):
+    #         delete_secret(secrets_client, test_secret)
+    
         
     
     
