@@ -99,7 +99,7 @@ class TestFetchSecrets:
         test_password = "testpassword"
         add_secret(secrets_client, test_secret, test_username, test_password)
         fetch_secret(secrets_client, test_secret)
-        with open(f"{test_secret}.txt", "r", encoding="utf-8") as file:
+        with open(f"secrets/{test_secret}.txt", "r", encoding="utf-8") as file:
             secret = file.read()
             assert secret == "{'username': 'testusername', 'password': 'testpassword'}"
 
