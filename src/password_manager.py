@@ -3,6 +3,7 @@ from utils.add_secret import add_secret
 from utils.fetch_secret import fetch_secret
 from utils.list_secrets import list_secrets
 from utils.exit import check_exit
+from utils.delete_secret import delete_secret
 import boto3
 
 """Initialise values"""
@@ -37,6 +38,12 @@ while not Check_Exit:
             print("Specify secret to retrieve:")
             secret_id = input()
             fetch_secret(secrets_client, secret_id)
+        
+        if user_input == 'd':
+            user_input = 0
+            print("Specify secret to delete:")
+            secret_id = input()
+            delete_secret(secrets_client, secret_id)
         
         if user_input == 'l':
             user_input = 0
