@@ -4,12 +4,13 @@ import sys
 import boto3
 from moto import mock_aws
 from unittest.mock import patch
-from utils.get_user_input import get_user_input
-from utils.add_secret import add_secret
-from utils.fetch_secret import fetch_secret
-from utils.list_secrets import list_secrets
-from utils.exit import check_exit
-from utils.delete_secret import delete_secret
+from src.utils.get_user_input import get_user_input
+from src.utils.add_secret import add_secret
+from src.utils.fetch_secret import fetch_secret
+from src.utils.list_secrets import list_secrets
+from src.utils.exit import check_exit
+from src.utils.delete_secret import delete_secret
+from botocore.exceptions import ClientError
 
 sys.path.insert(
     0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../secrets"))
@@ -39,7 +40,7 @@ def secrets_client(aws_creds):
 
 class TestGetUserInput:
     @pytest.mark.it("should accept valid inputs of 'e', 'r', 'd', 'l' and 'x'")
-    @patch("utils.get_user_input.input")
+    @patch("src.utils.get_user_input.input")
     def test_get_user_input_returns_valid_inputs(self, mock_input):
         mock_input.return_value = "e"
         assert get_user_input() == "e"
@@ -52,13 +53,13 @@ class TestGetUserInput:
         mock_input.return_value = "x"
         assert get_user_input() == "x"
 
-    @patch("utils.get_user_input.input")
+    @patch("src.utils.get_user_input.input")
     @pytest.mark.it("should return valid letters in lowercase")
     def test_get_user_input_returns_valid_capitals_in_lower_case(self, mock_input):
         mock_input.return_value = "E"
         assert get_user_input() == "e"
 
-    @patch("utils.get_user_input.input")
+    @patch("src.utils.get_user_input.input")
     @pytest.mark.it("should return zero if input invalid")
     def test_get_user_input_return_zero_for_invalid_input(self, mock_input):
         mock_input.return_value = "p"
@@ -127,6 +128,17 @@ class TestListSecrets:
         assert isinstance(secret_list, list)
         assert len(secret_list) == 0
 
+    @pytest.mark.it("should return a list containing a secret")
+    def test_add_secret_stores_a_secret_in_secret_manager(self, secrets_client):
+        test_secret = "testsecret"
+        test_username = "testusername"
+        test_password = "testpassword"
+        add_secret(secrets_client, test_secret, test_username, test_password)
+        secret_list = list_secrets(secrets_client)
+        assert len(secret_list) == 1
+        assert test_secret == secret_list[0]["Name"]
+        assert isinstance(secret_list, list)
+
     @pytest.mark.it("should return a list containing secrets")
     def test_add_secret_stores_many_secrets_in_secret_manager(self, secrets_client):
         test_secret1 = "testsecret"
@@ -140,6 +152,7 @@ class TestListSecrets:
         assert len(secret_list) == 2
         assert test_secret1 == secret_list[0]["Name"]
         assert test_secret2 == secret_list[1]["Name"]
+        assert isinstance(secret_list, list)
 
     @pytest.mark.it("should raise error if client doesn't exist")
     def test_list_secrets_raises_error_if_no_client(self, secrets_client):
@@ -174,10 +187,18 @@ class TestDelete:
         secret_list = list_secrets(secrets_client)
         assert len(secret_list) == 0
 
-    # @pytest.mark.it("should raise error if secret doesn't exist")
-    # def test_delete_secret_rasies_error_if_no_secrets(self, secrets_client):
-    #     test_secret = 'testsecret'
-    #     secret_list = list_secrets(secrets_client)
-    #     assert len(secret_list) == 0
-    #     with pytest.raises(Exception):
-    #         delete_secret(secrets_client, test_secret)
+    @pytest.mark.it("should raise error if secret doesn't exist")
+    def test_delete_secret_rasies_error_if_no_secrets(self, secrets_client):
+        test_secret = "dummysecret"
+        secret_list = list_secrets(secrets_client)
+        assert len(secret_list) == 0
+
+        error_response = {"Error": {"Code": "Exception"}}
+
+        with patch.object(
+            secrets_client,
+            "delete_secret",
+            side_effect=ClientError(error_response, "DeleteSecret"),
+        ):
+            with pytest.raises(Exception):
+                delete_secret(secrets_client, test_secret)

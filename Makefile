@@ -62,15 +62,15 @@ dev-setup: bandit black flake8 coverage
 
 ## Run the security test (bandit)
 security-test:
-	$(call execute_in_env, bandit -lll ./src/*.py ./utils/*.py)
+	$(call execute_in_env, bandit -lll ./src/*.py ./src/utils/*.py)
 
 ## Run the black code check
 run-black:
-	$(call execute_in_env, black  ./src/*.py ./utils/*.py ./test/*.py)
+	$(call execute_in_env, black  ./src/*.py ./src/utils/*.py ./test/*.py)
 
 ## Run the black code check
 run-flake8:
-	$(call execute_in_env, flake8  ./src/*.py ./utils/*.py)
+	$(call execute_in_env, flake8  ./src/*.py ./src/utils/*.py)
 
 ## Run the unit tests
 unit-test:
@@ -78,7 +78,7 @@ unit-test:
 
 ## Run the coverage check
 check-coverage:
-	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest --cov=src test/)
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH} pytest --cov=src/utils test/)
 
 ## Run all checks
-run-checks: security-test run-black unit-test check-coverage
+run-checks: security-test run-black flake8 unit-test check-coverage

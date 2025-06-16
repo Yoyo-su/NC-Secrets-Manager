@@ -12,4 +12,4 @@ def delete_secret(client, secret_id):
         print("Secret deleted.")
     except Exception as error:
         print(f"Failed to delete secret: {error}")
-        raise Exception
+        raise error
