@@ -1,5 +1,6 @@
 import pytest
 import os
+import sys
 import boto3
 from moto import mock_aws
 from unittest.mock import patch
@@ -9,6 +10,10 @@ from utils.fetch_secret import fetch_secret
 from utils.list_secrets import list_secrets
 from utils.exit import check_exit
 from utils.delete_secret import delete_secret
+
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../secrets"))
+)
 
 """Test suite for the password manager application.
 This suite tests the functionality of adding, fetching, deleting, and listing secrets,

@@ -4,7 +4,7 @@ def get_user_input():
 
     Returns:
         string: The user input for the password manager command
-        
+
     Raises:
         ValueError: If the user input is not one of the acceptable inputs
         KeyError: If the user input is not a recognized command

@@ -11,7 +11,7 @@ def fetch_secret(client, secret_id):
     """
     try:
         response = client.get_secret_value(SecretId=secret_id)
-        with open(f"../secrets/{secret_id}.txt", "w", encoding="utf-8") as file:
+        with open(f"secrets/{secret_id}.txt", "w", encoding="utf-8") as file:
             file.write(response["SecretString"])
         print("Secret saved.")
     except Exception as error:
