@@ -4,6 +4,9 @@ BUCKET_NAME = "warmupbucket-iafm210525"  # You can change this
 TEXT_1 = "text1.txt"
 TEXT_2 = "text2.txt"
 
+"""This is a warm-up script that has some simple boto3 interactions with AWS S3.
+"""
+
 
 def warm_up():
     s3client = boto3.client("s3")

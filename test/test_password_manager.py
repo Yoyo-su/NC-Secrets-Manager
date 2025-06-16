@@ -10,6 +10,11 @@ from utils.list_secrets import list_secrets
 from utils.exit import check_exit
 from utils.delete_secret import delete_secret
 
+"""Test suite for the password manager application.
+This suite tests the functionality of adding, fetching, deleting, and listing secrets,
+as well as checking for exit commands.
+"""
+
 
 @pytest.fixture
 def aws_creds():
