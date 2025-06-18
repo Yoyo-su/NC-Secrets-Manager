@@ -69,7 +69,7 @@ Each function is tested individually using TDD in the test/test_password_manager
 ## 📁 File Structure
 
 ```
-DE-PASSWORD-MANAGER
+NC-PASSWORD-MANAGER
 ├── .github
 │   └── workflows
 │       └── PM_deployment.yml       # CI/CD Automated deployment via Github Actions
